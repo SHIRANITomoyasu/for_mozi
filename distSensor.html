@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public
+   - License, v. 2.0. If a copy of the MPL was not distributed with this file,
+   - You can obtain one at http://mozilla.org/MPL/2.0/.  -->
+<html lang="ja" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+    <title>distance sensor</title>
+    <style type="text/css">
+    html {
+        background-color: black;
+    }
+    h1 {
+        color: green;
+    }
+    input {
+        font-size: 64px;
+        width: 320px;
+        height: 80px;
+        text-align: center;
+        color: gray;
+    }
+    #distance {
+        font-size: 128px;
+        color: white;
+    }
+    </style>
+    <script src="js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript">
+        var DEV_PORT = "COM3";
+
+        var arduino;
+
+        var digitalPin = 13;
+        var analogPin = 0;
+
+        var high = 1;
+        var low = 0;
+
+        var note = [262, 294, 330, 349, 392, 440, 494, 523];
+        var duration = 300;
+
+        var step = 300;
+        var loop;
+
+        var beep = function() {
+            var sum = 0;
+            for(var i=0; i<100; i++) {
+                sum += arduino.analogRead(analogPin);
+            }
+
+            var val = Math.floor(sum / 100);
+            var dist = document.getElementById("distance");
+            dist.innerHTML = "<br>" + (val > 600 ? "too far." : "distance = " + val) + "<br>";
+
+            console.log(val);
+
+            if(val <= 600){
+                var k = 0;
+
+                for(var i=0; i<note.length; ++i){
+                    if(Math.abs(val - note[i]) < Math.abs(val - note[k])){
+                        k = i;
+                    }
+                }
+
+                var freq = Math.floor(1000000 / note[k]);
+                arduino.pinMode(digitalPin, high);
+                arduino.pulse(digitalPin, freq, freq);
+                arduino.delayMicroseconds(duration);
+                arduino.digitalWrite(digitalPin, low);
+
+            }
+
+            loop = setTimeout('beep()', step);
+        }
+
+        var start = function(){
+            if(loop)clearTimeout(loop);
+            loop = setTimeout('beep()', step);
+        }
+
+        var stop = function(){
+            if(loop)clearTimeout(loop);
+        }
+
+        $(document).ready(function() {
+            arduino = document.arduino;
+            arduino.open(DEV_PORT);
+            arduino.pinMode(digitalPin, true);
+        });
+    </script>
+</head>
+<body>
+    <h1>arduino x distance sensor</h1><br>
+    <div align="center">
+        <input type="button" name="start" value="start" onclick="start()">
+        <input type="button" name="stop" value="stop" onclick="stop()">
+    </div><br>
+    <center id="distance">distance = 0.00</div>
+</body>
+</html>
