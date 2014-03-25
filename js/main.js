@@ -1,4 +1,4 @@
-var DEV_PORT = "/dev/cu.usbmodemfd121";
+var DEV_PORT = "COM3";
 
 var analogPin = 12;
 
