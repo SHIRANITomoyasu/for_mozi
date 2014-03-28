@@ -24,6 +24,11 @@
         font-size: 128px;
         color: white;
     }
+    #settings {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+    }
     </style>
     <script src="js/jquery-1.7.2.min.js"></script>
     <script type="text/javascript">
@@ -83,12 +88,18 @@
         var stop = function(){
             if(loop)clearTimeout(loop);
         }
-
-        $(document).ready(function() {
+        function ready_() {
             arduino = document.arduino;
             arduino.open(DEV_PORT);
             arduino.pinMode(digitalPin, true);
         });
+	$(function () {
+	    ready_();
+        });
+	function changeDevicePort() {
+	    DEV_PORT = $('#devPort').val();
+	    ready_();
+	}	
     </script>
 </head>
 <body>
@@ -98,5 +109,10 @@
         <input type="button" name="stop" value="stop" onclick="stop()">
     </div><br>
     <center id="distance">distance = 0.00</div>
+    <form id="settings" action="javascript:void(0)">
+        Device Port:
+        <input type="text" id="devPort">
+        <input type="button" value="Change" onclick="changeDevicePort()">
+    </form> 
 </body>
 </html>
