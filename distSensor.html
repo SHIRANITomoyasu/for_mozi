@@ -56,7 +56,7 @@
 
             var val = Math.floor(sum / 100);
             var dist = document.getElementById("distance");
-            dist.innerHTML = "<br>" + (val > 600 ? "too far." : "distance = " + val) + "<br>";
+            dist.innerHTML = "<br>" + (val > 600 ? "too near." : "distance = " + 600-val) + "<br>";
 
             console.log(val);
 
