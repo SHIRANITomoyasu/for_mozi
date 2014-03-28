@@ -51,8 +51,14 @@
 
             var val = Math.floor(sum / 100);
             var dist = document.getElementById("distance");
-            dist.innerHTML = "<br>" + (val > 600 ? "too far." : "distance = " + val) + "<br>";
-
+            
+	         if(val>600) dist.innerHTML = "<br>" + "too near" + "<br>";
+	    else if(val>510) dist.innerHTML = "<br>" + "very near" + "<br>";
+	    else if(val>420) dist.innerHTML = "<br>" + "near" + "<br>";
+	    else if(val>330) dist.innerHTML = "<br>" + "normal" + "<br>";
+	    else if(val>240) dist.innerHTML = "<br>" + "far" + "<br>";
+	    else if(val>150) dist.innerHTML = "<br>" + "very far" + "<br>";
+	    else if(val>60 ) dist.innerHTML = "<br>" + "too far" + "<br>";
             console.log(val);
 
             if(val <= 600){
