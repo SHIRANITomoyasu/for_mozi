@@ -24,11 +24,6 @@
         font-size: 128px;
         color: white;
     }
-    #settings {
-        position: fixed;
-        bottom: 10px;
-        right: 10px;
-    }
     </style>
     <script src="js/jquery-1.7.2.min.js"></script>
     <script type="text/javascript">
@@ -56,7 +51,7 @@
 
             var val = Math.floor(sum / 100);
             var dist = document.getElementById("distance");
-            dist.innerHTML = "<br>" + (val > 600 ? "too near." : "distance = " + 600-val) + "<br>";
+            dist.innerHTML = "<br>" + (val > 600 ? "too far." : "distance = " + val) + "<br>";
 
             console.log(val);
 
@@ -88,18 +83,12 @@
         var stop = function(){
             if(loop)clearTimeout(loop);
         }
-        function ready_() {
+
+        $(document).ready(function() {
             arduino = document.arduino;
             arduino.open(DEV_PORT);
             arduino.pinMode(digitalPin, true);
         });
-	$(function () {
-	    ready_();
-        });
-	function changeDevicePort() {
-	    DEV_PORT = $('#devPort').val();
-	    ready_();
-	}	
     </script>
 </head>
 <body>
@@ -109,10 +98,5 @@
         <input type="button" name="stop" value="stop" onclick="stop()">
     </div><br>
     <center id="distance">distance = 0.00</div>
-    <form id="settings" action="javascript:void(0)">
-        Device Port:
-        <input type="text" id="devPort">
-        <input type="button" value="Change" onclick="changeDevicePort()">
-    </form> 
 </body>
 </html>
