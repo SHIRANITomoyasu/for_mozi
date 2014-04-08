@@ -13,6 +13,7 @@
     h1 {
         color: green;
     }
+    /*
     input {
         font-size: 64px;
         width: 320px;
@@ -20,9 +21,23 @@
         text-align: center;
         color: gray;
     }
+    */
     #distance {
         font-size: 128px;
         color: white;
+    }
+    #upperButtons {
+    	font-size: 64px;
+    	width: 320px;
+    	height: 80px;
+    	text-align: center;
+    	color: gray;
+    }
+    #settings {
+    	color: white;
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
     }
     </style>
     <script src="js/jquery-1.7.2.min.js"></script>
@@ -52,13 +67,13 @@
             var val = Math.floor(sum / 100);
             var dist = document.getElementById("distance");
             
-	         if(val>600) dist.innerHTML = "<br>" + "too near" + "<br>";
-	    else if(val>510) dist.innerHTML = "<br>" + "very near" + "<br>";
-	    else if(val>420) dist.innerHTML = "<br>" + "near" + "<br>";
-	    else if(val>330) dist.innerHTML = "<br>" + "normal" + "<br>";
-	    else if(val>240) dist.innerHTML = "<br>" + "far" + "<br>";
-	    else if(val>150) dist.innerHTML = "<br>" + "very far" + "<br>";
-	    else if(val>60 ) dist.innerHTML = "<br>" + "too far" + "<br>";
+	        if(val>600) dist.innerHTML = "<br>" + "too near" + "<br>";
+	        else if(val>510) dist.innerHTML = "<br>" + "very near" + "<br>";
+	        else if(val>420) dist.innerHTML = "<br>" + "near" + "<br>";
+	        else if(val>330) dist.innerHTML = "<br>" + "normal" + "<br>";
+	        else if(val>240) dist.innerHTML = "<br>" + "far" + "<br>";
+	        else if(val>150) dist.innerHTML = "<br>" + "very far" + "<br>";
+	        else if(val>60 ) dist.innerHTML = "<br>" + "too far" + "<br>";
             console.log(val);
 
             if(val <= 600){
@@ -90,19 +105,44 @@
             if(loop)clearTimeout(loop);
         }
 
-        $(document).ready(function() {
-            arduino = document.arduino;
-            arduino.open(DEV_PORT);
-            arduino.pinMode(digitalPin, true);
+        function setup() {
+        	if(document.arduino) {
+        		arduino = document.arduino;
+        		try {
+                    arduino.open(DEV_PORT);
+                    arduino.pinMode(digitalPin, true);
+        		} catch(e) {
+        			alert("Connection failed!");
+        		}
+        	}
+        	else {
+        		alert("NO arduino.js!");
+        	}
+        }
+
+        $(function() {
+        	setup();
         });
+
+        function changeDevicePort(){
+            DEV_PORT = $('#devPort').val();
+            setup();
+        }
+
     </script>
 </head>
 <body>
     <h1>arduino x distance sensor</h1><br>
     <div align="center">
-        <input type="button" name="start" value="start" onclick="start()">
-        <input type="button" name="stop" value="stop" onclick="stop()">
-    </div><br>
-    <center id="distance">distance = 0.00</div>
+        <input type="button" id="upperButtons" name="start" value="start" onclick="start()">
+        <input type="button" id="upperButtons" name="stop" value="stop" onclick="stop()">
+    </div>
+    <br>
+    <center id="distance">distance = 0.00</div></center>
+    <form id="settings" action="javascript:void(0)">
+        Device Port:
+        <input type="text" id="devPort">
+        <input type="button" value="Change" onclick="changeDevicePort()">
+    </form>
 </body>
 </html>
